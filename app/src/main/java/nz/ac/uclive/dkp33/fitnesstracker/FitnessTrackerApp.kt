@@ -1,5 +1,13 @@
 package nz.ac.uclive.dkp33.fitnesstracker
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandIn
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -7,6 +15,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,18 +30,15 @@ import java.util.*
 @Composable
 fun FitnessTrackerApp() {
     val navController = rememberNavController()
-
-    FitnessTrackerTheme {
-        NavHost(navController, startDestination = Screen.Home.title) {
-            composable(Screen.Home.title) {
-                HomeScreen(navController)
-            }
-            composable(Screen.WorkoutTracking.title) {
-                WorkoutTrackingScreen(navController)
-            }
-            composable(Screen.WorkoutHistory.title) {
-                WorkoutHistoryScreen(navController)
-            }
+    NavHost(navController, startDestination = Screen.Home.title) {
+        composable(Screen.Home.title) {
+            HomeScreen(navController)
+        }
+        composable(Screen.WorkoutTracking.title) {
+            WorkoutTrackingScreen(navController)
+        }
+        composable(Screen.WorkoutHistory.title) {
+            WorkoutHistoryScreen(navController)
         }
     }
 }
@@ -76,13 +82,19 @@ fun WorkoutHistoryScreen(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutHistoryItem(workout: Workout) {
+    var expanded by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        elevation = 4.dp
+        elevation = 4.dp,
+        onClick = {
+            expanded = !expanded
+        }
     ) {
         Column(
             modifier = Modifier.padding(16.dp)
@@ -97,8 +109,8 @@ fun WorkoutHistoryItem(workout: Workout) {
             Text("Exercises:")
             Spacer(modifier = Modifier.height(4.dp))
             Column {
-                workout.exercises.forEach { exercise ->
-                    ExerciseItem(exercise = exercise)
+                workout.exercises.forEachIndexed { index, exercise ->
+                    ExerciseItem(exercise = exercise, showSets = expanded)
                 }
             }
         }
@@ -106,19 +118,32 @@ fun WorkoutHistoryItem(workout: Workout) {
 }
 
 @Composable
-fun ExerciseItem(exercise: Exercise) {
+fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
+    val alpha = animateFloatAsState(if (showSets) 1f else 0f).value
+
     Text(
         text = exercise.name,
         fontWeight = FontWeight.Bold
     )
-    exercise.sets.forEachIndexed { index, (weight, repetitions) ->
-        Text(
-            text = "  Set ${index + 1}: Weight: $weight kg, Reps: $repetitions",
-            fontStyle = FontStyle.Italic
-        )
+    AnimatedVisibility(
+        visible = showSets,
+        enter = fadeIn() + expandVertically(),
+        exit = fadeOut() + shrinkVertically()
+    ) {
+        Column(
+            modifier = Modifier.alpha(alpha)
+        ) {
+            exercise.sets.forEachIndexed { index, (weight, repetitions) ->
+                Text(
+                    text = "  Set ${index + 1}: Weight: $weight kg, Reps: $repetitions",
+                    fontStyle = FontStyle.Italic
+                )
+            }
+        }
     }
     Spacer(modifier = Modifier.height(4.dp))
 }
+
 
 
 @Composable
