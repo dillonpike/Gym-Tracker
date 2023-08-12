@@ -55,11 +55,6 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
-@Composable
-fun WorkoutTrackingScreen(navController: NavController) {
-    Text(text = "Tracking")
-}
-
 sealed class Screen(val title: String) {
     object Home : Screen("Home")
     object WorkoutTracking : Screen("Workout Tracking")
