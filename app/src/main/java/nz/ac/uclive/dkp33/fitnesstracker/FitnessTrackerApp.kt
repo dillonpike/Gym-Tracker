@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import nz.ac.uclive.dkp33.fitnesstracker.Screens.WorkoutTrackingScreen
 
 @Composable
 fun FitnessTrackerApp() {

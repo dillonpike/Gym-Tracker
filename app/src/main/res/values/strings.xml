@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Fitness Tracker</string>
+    <string name="add_set_button_description">Add Set</string>
+    <string name="add_exercise_button">Add Exercise</string>
 </resources>
