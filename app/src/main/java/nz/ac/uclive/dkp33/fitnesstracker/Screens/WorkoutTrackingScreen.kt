@@ -1,48 +1,65 @@
 package nz.ac.uclive.dkp33.fitnesstracker.Screens
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.*
+import androidx.navigation.compose.rememberNavController
 import nz.ac.uclive.dkp33.fitnesstracker.R
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
 import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
-import java.util.*
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel()) {
     val exercises by workoutViewModel.exercises.observeAsState(listOf())
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+    Scaffold(
+        bottomBar = {
+            AddExerciseButton(workoutViewModel)
+        }
     ) {
-        AddWorkoutHeading()
-        Box (modifier = Modifier.weight(0.95f)) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            Row {
+                AddWorkoutHeading()
+                Spacer(Modifier.weight(1f))
+                Button(
+                    onClick = {},
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colors.secondary)
+                ) {
+                    Text(text = "Save")
+                }
+            }
             LazyColumn {
                 itemsIndexed(exercises) { exerciseIndex, exercise ->
                     Card(
@@ -73,9 +90,6 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
                 }
             }
         }
-        Box (modifier = Modifier.weight(0.05f).padding(top=4.dp)) {
-            AddExerciseButton(workoutViewModel)
-        }
     }
 }
 
@@ -95,7 +109,7 @@ private fun AddExerciseButton(workoutViewModel: WorkoutViewModel) {
         onClick = {
             workoutViewModel.addExercise()
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal=16.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Add,
@@ -144,7 +158,8 @@ private fun SetTextField(value: String, onValueChange: (String) -> Unit) {
         onValueChange = { onValueChange(it) },
         fontSize = 16.sp,
         placeholderText = "",
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
     )
 }
 
@@ -223,7 +238,8 @@ private fun CustomTextField(
     trailingIcon: (@Composable () -> Unit)? = null,
     placeholderText: String = "Placeholder",
     fontSize: TextUnit = MaterialTheme.typography.body2.fontSize,
-    textAlign: TextAlign = TextAlign.Left
+    textAlign: TextAlign = TextAlign.Left,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     BasicTextField(
         modifier = modifier
@@ -231,11 +247,9 @@ private fun CustomTextField(
             MaterialTheme.colors.surface,
             MaterialTheme.shapes.small,
         ),
-//        .fillMaxWidth(),
         value = value,
-        onValueChange = {
-            Log.v("info", it)
-            onValueChange(it) },
+        onValueChange = { onValueChange(it) },
+        keyboardOptions = keyboardOptions,
         singleLine = true,
         cursorBrush = SolidColor(MaterialTheme.colors.primary),
         textStyle = LocalTextStyle.current.copy(
