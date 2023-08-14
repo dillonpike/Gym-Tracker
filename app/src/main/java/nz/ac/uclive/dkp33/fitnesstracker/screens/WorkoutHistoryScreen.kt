@@ -12,16 +12,20 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
+import com.example.inventory.ui.AppViewModelProvider
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.Workout
+import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun WorkoutHistoryScreen(navController: NavController) {
+fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     val workoutHistory = generateDummyWorkoutHistory() // Replace with actual data
+//    val workoutHistory = workoutViewModel.workouts.
     LazyColumn {
         items(workoutHistory) { workout ->
             WorkoutHistoryItem(workout = workout)
@@ -95,20 +99,20 @@ fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
 fun generateDummyWorkoutHistory(): List<Workout> {
     val workoutList = mutableListOf<Workout>()
 
-    val exercise1 = Exercise("Push-up", listOf(5.0f to 15, 5.5f to 12, 6.0f to 10))
-    val exercise2 = Exercise("Squat", listOf(10.0f to 10, 11.0f to 8, 12.0f to 6))
-    val exercise3 = Exercise("Pull-up", listOf(8.0f to 8, 9.0f to 6, 10.0f to 4))
-    val exercise4 = Exercise("Plank", listOf(1.5f to 60, 1.75f to 50))
+    val exercise1 = Exercise(name = "Push-up", sets = listOf(5.0f to 15, 5.5f to 12, 6.0f to 10))
+    val exercise2 = Exercise(name = "Squat", sets = listOf(10.0f to 10, 11.0f to 8, 12.0f to 6))
+    val exercise3 = Exercise(name = "Pull-up", sets = listOf(8.0f to 8, 9.0f to 6, 10.0f to 4))
+    val exercise4 = Exercise(name = "Plank", sets = listOf(1.5f to 60, 1.75f to 50))
 
-    val workout1 = Workout(Date(), listOf(exercise1))
-    val workout2 = Workout(Date(), listOf(exercise1, exercise2))
-    val workout3 = Workout(Date(), listOf(exercise3, exercise4))
-    val workout4 = Workout(Date(), listOf(exercise4, exercise2))
-
-    workoutList.add(workout1)
-    workoutList.add(workout2)
-    workoutList.add(workout3)
-    workoutList.add(workout4)
+//    val workout1 = Workout(Date(), listOf(exercise1))
+//    val workout2 = Workout(Date(), listOf(exercise1, exercise2))
+//    val workout3 = Workout(Date(), listOf(exercise3, exercise4))
+//    val workout4 = Workout(Date(), listOf(exercise4, exercise2))
+//
+//    workoutList.add(workout1)
+//    workoutList.add(workout2)
+//    workoutList.add(workout3)
+//    workoutList.add(workout4)
 
     // Add more workouts...
 

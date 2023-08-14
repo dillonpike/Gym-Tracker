@@ -1,9 +1,6 @@
 package nz.ac.uclive.dkp33.fitnesstracker.model
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -15,12 +12,11 @@ class WorkoutViewModel(private val workoutRepository: WorkoutRepository) : ViewM
         workoutRepository.insert(workout)
     }
 
-
     private val _workoutDate = MutableLiveData<Date>(Calendar.getInstance().time)
     val workoutDate: LiveData<Date>
         get() = _workoutDate
 
-    private val _exercises = MutableLiveData<List<Exercise>>(listOf(Exercise("", listOf(0f to 0))))
+    private val _exercises = MutableLiveData<List<Exercise>>(listOf(Exercise(name = "", sets = listOf(0f to 0))))
     val exercises: LiveData<List<Exercise>>
         get() = _exercises
 
@@ -44,7 +40,7 @@ class WorkoutViewModel(private val workoutRepository: WorkoutRepository) : ViewM
 
     fun addExercise() {
         val updatedExercises = exercises.value?.toMutableList() ?: mutableListOf()
-        updatedExercises.add(Exercise("", listOf(0f to 0)))
+        updatedExercises.add(Exercise(name = "", sets = listOf(0f to 0)))
         _exercises.value = updatedExercises
     }
 

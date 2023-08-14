@@ -1,7 +1,6 @@
-package nz.ac.uclive.dkp33.fitnesstracker.Screens
+package nz.ac.uclive.dkp33.fitnesstracker.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -30,15 +28,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.inventory.ui.AppViewModelProvider
+import nz.ac.uclive.dkp33.fitnesstracker.FitnessTrackerApplication
 import nz.ac.uclive.dkp33.fitnesstracker.R
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
+import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModelFactory
 import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel()) {
+fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     val exercises by workoutViewModel.exercises.observeAsState(listOf())
+
     Scaffold(
         bottomBar = {
             AddExerciseButton(workoutViewModel)
