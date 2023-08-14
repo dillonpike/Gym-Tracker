@@ -3,9 +3,18 @@ package nz.ac.uclive.dkp33.fitnesstracker.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import java.util.*
 
-class WorkoutViewModel : ViewModel() {
+class WorkoutViewModel(private val workoutRepository: WorkoutRepository) : ViewModel() {
+
+    val workouts: LiveData<List<Workout>> = workoutRepository.workouts.asLiveData()
+
+    fun addWorkout(workout: Workout) = viewModelScope.launch {
+        workoutRepository.insert(workout)
+    }
+
 
     private val _workoutDate = MutableLiveData<Date>(Calendar.getInstance().time)
     val workoutDate: LiveData<Date>

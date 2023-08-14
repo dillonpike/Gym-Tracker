@@ -1,8 +1,13 @@
 package nz.ac.uclive.dkp33.fitnesstracker.model
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.util.Date
 
+@Entity(tableName = "workout")
 data class Workout(
-    val date: Date,
-    val exercises: List<Exercise>
+    @PrimaryKey(autoGenerate = true) var id: Long = 0,
+    @ColumnInfo var date: Date,
+    @ColumnInfo var exercises: List<Exercise>
 )
