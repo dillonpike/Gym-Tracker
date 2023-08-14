@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import nz.ac.uclive.dkp33.fitnesstracker.ui.AppViewModelProvider
 import nz.ac.uclive.dkp33.fitnesstracker.R
+import nz.ac.uclive.dkp33.fitnesstracker.Screen
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
 import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
@@ -53,7 +54,10 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
                 AddWorkoutHeading()
                 Spacer(Modifier.weight(1f))
                 Button(
-                    onClick = {},
+                    onClick = {
+                        workoutViewModel.addWorkout()
+                        navController.navigate(Screen.WorkoutHistory.title)
+                    },
                     modifier = Modifier.padding(bottom = 16.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colors.secondary)
                 ) {
@@ -192,7 +196,8 @@ private fun SetTitles() {
 
 @Composable
 private fun SetRows(workoutViewModel: WorkoutViewModel, exercise: Exercise, exerciseIndex: Int) {
-    exercise.sets.forEachIndexed { setIndex, set ->
+    exercise.weights.forEachIndexed { setIndex, weight ->
+        val reps = exercise.reps[setIndex]
         Row (
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly
@@ -208,18 +213,17 @@ private fun SetRows(workoutViewModel: WorkoutViewModel, exercise: Exercise, exer
                 contentAlignment = Alignment.Center
             ) {
                 SetTextField(
-                    value = "${set.first}",
+                    value = "${weight}",
                     onValueChange = {
                         workoutViewModel.updateSetValue(exerciseIndex, setIndex, it, true)
                     }
                 )
             }
-            Box(
-                modifier = Modifier.weight(1f),
+            Box(                modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.Center
             ) {
                 SetTextField(
-                    value = "${set.second}",
+                    value = "${reps}",
                     onValueChange = {
                         workoutViewModel.updateSetValue(exerciseIndex, setIndex, it, false)
                     }

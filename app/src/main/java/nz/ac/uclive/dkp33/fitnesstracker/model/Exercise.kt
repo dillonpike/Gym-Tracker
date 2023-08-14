@@ -1,12 +1,14 @@
 package nz.ac.uclive.dkp33.fitnesstracker.model
 
-import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "exercise")
+@Entity
 data class Exercise(
-    @PrimaryKey(autoGenerate = true) var id: Long = 0,
-    @ColumnInfo var name: String,
-    @ColumnInfo val sets: List<Pair<Float, Int>>
+    @PrimaryKey(autoGenerate = true) val exerciseId: Long = 0,
+    var workoutId: Long,
+    val name: String,
+    val weights: List<Float>,
+    val reps: List<Int>
 )

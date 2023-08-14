@@ -7,6 +7,7 @@ import android.content.Context
  */
 interface AppContainer {
     val workoutRepository: WorkoutRepository
+    val exerciseRepository: ExerciseRepository
 }
 
 /**
@@ -18,5 +19,9 @@ class AppDataContainer(private val context: Context) : AppContainer {
      */
     override val workoutRepository: WorkoutRepository by lazy {
         WorkoutRepository(WorkoutDatabase.getDatabase(context).workoutDao())
+    }
+
+    override val exerciseRepository: ExerciseRepository by lazy {
+        ExerciseRepository(WorkoutDatabase.getDatabase(context).exerciseDao())
     }
 }

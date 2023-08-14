@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontStyle
@@ -15,27 +16,26 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
-import nz.ac.uclive.dkp33.fitnesstracker.ui.AppViewModelProvider
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
-import nz.ac.uclive.dkp33.fitnesstracker.model.Workout
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
+import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutWithExercises
+import nz.ac.uclive.dkp33.fitnesstracker.ui.AppViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
-    val workoutHistory = generateDummyWorkoutHistory() // Replace with actual data
-//    val workoutHistory = workoutViewModel.workouts.
+    val workoutHistory by workoutViewModel.workouts.observeAsState(listOf())
     LazyColumn {
-        items(workoutHistory) { workout ->
-            WorkoutHistoryItem(workout = workout)
+        items(workoutHistory) { workoutWithExercises ->
+            WorkoutHistoryItem(workoutWithExercises = workoutWithExercises)
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun WorkoutHistoryItem(workout: Workout) {
+fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
@@ -50,7 +50,7 @@ fun WorkoutHistoryItem(workout: Workout) {
             modifier = Modifier.padding(16.dp)
         ) {
             val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
-            val formattedDate = dateFormatter.format(workout.date)
+            val formattedDate = dateFormatter.format(workoutWithExercises.workout.date)
             Text(
                 text = "Workout Date: $formattedDate",
                 fontWeight = FontWeight.Bold
@@ -59,7 +59,7 @@ fun WorkoutHistoryItem(workout: Workout) {
             Text("Exercises:")
             Spacer(modifier = Modifier.height(4.dp))
             Column {
-                workout.exercises.forEachIndexed { index, exercise ->
+                workoutWithExercises.exercises.forEachIndexed { index, exercise ->
                     ExerciseItem(exercise = exercise, showSets = expanded)
                 }
             }
@@ -70,10 +70,19 @@ fun WorkoutHistoryItem(workout: Workout) {
 @Composable
 fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
     val alpha = animateFloatAsState(if (showSets) 1f else 0f).value
-    val bestSet = exercise.sets.maxWith(compareBy({ it.first }, { it.second }))
+    var maxVolume = 0.0f
+    var bestSetIndex = 0
+
+    for (i in exercise.weights.indices) {
+        val volume = exercise.weights[i] * exercise.reps[i]
+        if (volume > maxVolume) {
+            maxVolume = volume
+            bestSetIndex = i
+        }
+    }
 
     Text(
-        text = "${exercise.name}  Best Set: ${bestSet.second} x ${bestSet.first} kg",
+        text = "${exercise.name}  Best Set: ${exercise.reps[bestSetIndex]} x ${exercise.weights[bestSetIndex]} kg",
         fontWeight = FontWeight.Bold
     )
     AnimatedVisibility(
@@ -84,37 +93,14 @@ fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
         Column(
             modifier = Modifier.alpha(alpha)
         ) {
-            exercise.sets.forEachIndexed { index, (weight, repetitions) ->
+            exercise.weights.forEachIndexed { index, weight ->
+                val reps = exercise.reps[index]
                 Text(
-                    text = "  Set ${index + 1}: Weight: $weight kg, Reps: $repetitions",
+                    text = "  Set ${index + 1}: Weight: $weight kg, Reps: $reps",
                     fontStyle = FontStyle.Italic
                 )
             }
         }
     }
     Spacer(modifier = Modifier.height(4.dp))
-}
-
-@Composable
-fun generateDummyWorkoutHistory(): List<Workout> {
-    val workoutList = mutableListOf<Workout>()
-
-    val exercise1 = Exercise(name = "Push-up", sets = listOf(5.0f to 15, 5.5f to 12, 6.0f to 10))
-    val exercise2 = Exercise(name = "Squat", sets = listOf(10.0f to 10, 11.0f to 8, 12.0f to 6))
-    val exercise3 = Exercise(name = "Pull-up", sets = listOf(8.0f to 8, 9.0f to 6, 10.0f to 4))
-    val exercise4 = Exercise(name = "Plank", sets = listOf(1.5f to 60, 1.75f to 50))
-
-//    val workout1 = Workout(Date(), listOf(exercise1))
-//    val workout2 = Workout(Date(), listOf(exercise1, exercise2))
-//    val workout3 = Workout(Date(), listOf(exercise3, exercise4))
-//    val workout4 = Workout(Date(), listOf(exercise4, exercise2))
-//
-//    workoutList.add(workout1)
-//    workoutList.add(workout2)
-//    workoutList.add(workout3)
-//    workoutList.add(workout4)
-
-    // Add more workouts...
-
-    return workoutList
 }

@@ -4,11 +4,10 @@ import androidx.annotation.WorkerThread
 import kotlinx.coroutines.flow.Flow
 
 class WorkoutRepository(private val workoutDao: WorkoutDao) {
-    val workouts: Flow<List<Workout>> = workoutDao.getAll()
+    val workouts: Flow<List<WorkoutWithExercises>> = workoutDao.getWorkoutsWithExercises()
 
-    @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insert(workout: Workout) {
-        workoutDao.insert(workout)
+    suspend fun insert(workout: Workout): Long {
+        return workoutDao.insert(workout)
     }
 }

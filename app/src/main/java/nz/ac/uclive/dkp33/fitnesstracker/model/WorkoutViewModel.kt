@@ -1,22 +1,30 @@
 package nz.ac.uclive.dkp33.fitnesstracker.model
 
+import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
 
-class WorkoutViewModel(private val workoutRepository: WorkoutRepository) : ViewModel() {
+class WorkoutViewModel(private val workoutRepository: WorkoutRepository, private val exerciseRepository: ExerciseRepository) : ViewModel() {
 
-    val workouts: LiveData<List<Workout>> = workoutRepository.workouts.asLiveData()
+    val workouts: LiveData<List<WorkoutWithExercises>> = workoutRepository.workouts.asLiveData()
 
-    fun addWorkout(workout: Workout) = viewModelScope.launch {
-        workoutRepository.insert(workout)
+    fun addWorkout() = viewModelScope.launch {
+        val workout = Workout(date = Date())
+        val workoutId = workoutRepository.insert(workout)
+        _exercises.value?.forEach { exercise ->
+            exercise.workoutId = workoutId
+            exerciseRepository.insert(exercise)
+        }
     }
 
     private val _workoutDate = MutableLiveData<Date>(Calendar.getInstance().time)
     val workoutDate: LiveData<Date>
         get() = _workoutDate
 
-    private val _exercises = MutableLiveData<List<Exercise>>(listOf(Exercise(name = "", sets = listOf(0f to 0))))
+    private val _exercises = MutableLiveData<List<Exercise>>(listOf(Exercise(name = "", workoutId = 0, weights = listOf(0f), reps = listOf(0))))
     val exercises: LiveData<List<Exercise>>
         get() = _exercises
 
@@ -40,16 +48,18 @@ class WorkoutViewModel(private val workoutRepository: WorkoutRepository) : ViewM
 
     fun addExercise() {
         val updatedExercises = exercises.value?.toMutableList() ?: mutableListOf()
-        updatedExercises.add(Exercise(name = "", sets = listOf(0f to 0)))
+        updatedExercises.add(Exercise(name = "", workoutId = 0, weights = listOf(0f), reps = listOf(0)))
         _exercises.value = updatedExercises
     }
 
     fun addSet(exerciseIndex: Int) {
         val exerciseList = exercises.value?.toMutableList() ?: return
         val exercise = exerciseList[exerciseIndex]
-        val newSets = exercise.sets.toMutableList()
-        newSets.add(newSets.last())
-        val updatedExercise = exercise.copy(sets = newSets)
+        val newWeights = exercise.weights.toMutableList()
+        val newReps = exercise.reps.toMutableList()
+        newWeights.add(newWeights.last())
+        newReps.add(newReps.last())
+        val updatedExercise = exercise.copy(weights = newWeights, reps = newReps)
         exerciseList[exerciseIndex] = updatedExercise
         _exercises.value = exerciseList
     }
@@ -57,16 +67,15 @@ class WorkoutViewModel(private val workoutRepository: WorkoutRepository) : ViewM
         val exerciseList = exercises.value?.toMutableList() ?: return
         if (exerciseList.size > exerciseIndex) {
             val exercise = exerciseList[exerciseIndex]
-            val newSets = exercise.sets.toMutableList()
-            if (newSets.isNotEmpty()) {
+            val newWeights = exercise.weights.toMutableList()
+            val newReps = exercise.reps.toMutableList()
+            if (newWeights.isNotEmpty()) {
                 if (isWeight) {
-                    val newWeight = newValue.toFloatOrNull() ?: 0f
-                    newSets[setIndex] = newWeight to newSets[setIndex].second
+                    newWeights[setIndex] = newValue.toFloatOrNull() ?: 0f
                 } else {
-                    val newReps = newValue.toIntOrNull() ?: 0
-                    newSets[setIndex] = newSets[setIndex].first to newReps
+                    newReps[setIndex] = newValue.toIntOrNull() ?: 0
                 }
-                val updatedExercise = exercise.copy(sets = newSets)
+                val updatedExercise = exercise.copy(weights = newWeights, reps = newReps)
                 exerciseList[exerciseIndex] = updatedExercise
                 _exercises.value = exerciseList
             }
