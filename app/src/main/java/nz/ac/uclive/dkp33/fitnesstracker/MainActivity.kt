@@ -11,10 +11,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            val database by lazy { WorkoutDatabase.getDatabase(this) }
-            val repository by lazy { WorkoutRepository(database.workoutDao()) }
-
             FitnessTrackerTheme {
                 FitnessTrackerApp()
             }

@@ -1,4 +1,4 @@
-package nz.ac.uclive.dkp33.fitnesstracker.screens
+package nz.ac.uclive.dkp33.fitnesstracker.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -28,12 +28,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.inventory.ui.AppViewModelProvider
-import nz.ac.uclive.dkp33.fitnesstracker.FitnessTrackerApplication
+import nz.ac.uclive.dkp33.fitnesstracker.ui.AppViewModelProvider
 import nz.ac.uclive.dkp33.fitnesstracker.R
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
-import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModelFactory
 import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")

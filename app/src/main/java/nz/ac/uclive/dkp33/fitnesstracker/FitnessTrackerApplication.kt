@@ -12,10 +12,6 @@ class FitnessTrackerApplication : Application() {
      */
     lateinit var container: AppContainer
 
-    val database by lazy { WorkoutDatabase.getDatabase(this) }
-    val repository by lazy { WorkoutRepository(database.workoutDao()) }
-
-
     override fun onCreate() {
         super.onCreate()
         container = AppDataContainer(this)

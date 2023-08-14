@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
-import com.example.inventory.ui.AppViewModelProvider
+import nz.ac.uclive.dkp33.fitnesstracker.ui.AppViewModelProvider
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.Workout
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
