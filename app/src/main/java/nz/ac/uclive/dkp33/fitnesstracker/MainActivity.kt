@@ -10,6 +10,7 @@ import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             FitnessTrackerTheme {
                 FitnessTrackerApp()

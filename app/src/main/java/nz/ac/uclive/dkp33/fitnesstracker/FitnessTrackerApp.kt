@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -45,13 +46,13 @@ fun HomeScreen(navController: NavController) {
             onClick = { navController.navigate(Screen.WorkoutTracking.title) },
             modifier = Modifier.padding(8.dp)
         ) {
-            Text(text = "Start Workout")
+            Text(text = stringResource(R.string.start_workout))
         }
         Button(
             onClick = { navController.navigate(Screen.WorkoutHistory.title) },
             modifier = Modifier.padding(8.dp)
         ) {
-            Text(text = "Workout History")
+            Text(text = stringResource(R.string.workout_history))
         }
     }
 }
