@@ -1,6 +1,8 @@
 package nz.ac.uclive.dkp33.fitnesstracker.ui.screens
 
 import android.annotation.SuppressLint
+import android.view.Gravity
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,8 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,11 +40,12 @@ import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
 import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@OptIn(ExperimentalComposeUiApi::class)
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "ShowToast")
 @Composable
 fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     val exercises by workoutViewModel.exercises.observeAsState(listOf())
-
+    val toast = Toast.makeText(LocalContext.current, stringResource(R.string.workout_completion_toast), Toast.LENGTH_SHORT)
     Scaffold(
         bottomBar = {
             AddExerciseButton(workoutViewModel)
@@ -57,6 +63,7 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
                     onClick = {
                         workoutViewModel.addWorkout()
                         navController.navigate(Screen.WorkoutHistory.title)
+                        toast.show()
                     },
                     modifier = Modifier.padding(bottom = 16.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colors.secondary)
