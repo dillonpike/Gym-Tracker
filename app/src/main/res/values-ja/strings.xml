@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Fitness Tracker</string>
-    <string name="add_set_button_description">Add Set</string>
-    <string name="add_exercise_button">Add Exercise</string>
-    <string name="workout_completion_toast">Congrats on completing your workout!</string>
-    <string name="save_workout_button">Save</string>
+    <string name="app_name">フィットネストラッカー</string>
+    <string name="add_set_button_description">セットを追加する</string>
+    <string name="add_exercise_button">エクササイズを追加する</string>
+    <string name="workout_completion_toast">トレーニングの完了おめでとうございます!</string>
+    <string name="save_workout_button">セーブ</string>
     <string name="add_workout_heading">Add Workout</string>
     <string name="text_field_placeholder">Placeholder</string>
     <string name="reps">Reps</string>

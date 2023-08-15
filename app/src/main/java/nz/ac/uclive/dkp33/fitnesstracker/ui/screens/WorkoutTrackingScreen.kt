@@ -68,7 +68,7 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
                     modifier = Modifier.padding(bottom = 16.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colors.secondary)
                 ) {
-                    Text(text = "Save")
+                    Text(text = stringResource(R.string.save_workout_button))
                 }
             }
             LazyColumn {
@@ -107,7 +107,7 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
 @Composable
 private fun AddWorkoutHeading() {
     Text(
-        text = "Add Workout",
+        text = stringResource(R.string.add_workout_heading),
         style = MaterialTheme.typography.h5,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(bottom = 16.dp)
@@ -158,7 +158,7 @@ private fun NameTextField(value : String, onValueChange: (String) -> Unit) {
         value = value,
         onValueChange = { onValueChange(it) },
         fontSize = 16.sp,
-        placeholderText = "Name"
+        placeholderText = stringResource(R.string.text_field_name_placeholder)
     )
 }
 
@@ -168,7 +168,6 @@ private fun SetTextField(value: String, onValueChange: (String) -> Unit) {
         value = value,
         onValueChange = { onValueChange(it) },
         fontSize = 16.sp,
-        placeholderText = "",
         textAlign = TextAlign.Center,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
     )
@@ -184,19 +183,19 @@ private fun SetTitles() {
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Set")
+            Text(text = stringResource(R.string.set))
         }
         Box(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Weight (kg)")
+            Text(text = stringResource(R.string.weight_kg))
         }
         Box(
             modifier = Modifier.weight(1f),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = "Reps")
+            Text(text = stringResource(R.string.reps))
         }
     }
 }
@@ -220,17 +219,18 @@ private fun SetRows(workoutViewModel: WorkoutViewModel, exercise: Exercise, exer
                 contentAlignment = Alignment.Center
             ) {
                 SetTextField(
-                    value = "${weight}",
+                    value = "$weight",
                     onValueChange = {
                         workoutViewModel.updateSetValue(exerciseIndex, setIndex, it, true)
                     }
                 )
             }
-            Box(                modifier = Modifier.weight(1f),
+            Box(
+                modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.Center
             ) {
                 SetTextField(
-                    value = "${reps}",
+                    value = "$reps",
                     onValueChange = {
                         workoutViewModel.updateSetValue(exerciseIndex, setIndex, it, false)
                     }
@@ -247,7 +247,7 @@ private fun CustomTextField(
     modifier: Modifier = Modifier,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
-    placeholderText: String = "Placeholder",
+    placeholderText: String = stringResource(R.string.text_field_placeholder),
     fontSize: TextUnit = MaterialTheme.typography.body2.fontSize,
     textAlign: TextAlign = TextAlign.Left,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
@@ -262,9 +262,9 @@ private fun CustomTextField(
         onValueChange = { onValueChange(it) },
         keyboardOptions = keyboardOptions,
         singleLine = true,
-        cursorBrush = SolidColor(MaterialTheme.colors.primary),
+        cursorBrush = SolidColor(colors.primary),
         textStyle = LocalTextStyle.current.copy(
-            color = MaterialTheme.colors.onSurface,
+            color = colors.onSurface,
             fontSize = fontSize,
             textAlign = textAlign
         ),
@@ -278,7 +278,7 @@ private fun CustomTextField(
                     if (value.isEmpty()) Text(
                         placeholderText,
                         style = LocalTextStyle.current.copy(
-                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f),
+                            color = colors.onSurface.copy(alpha = 0.3f),
                             fontSize = fontSize
                         )
                     )

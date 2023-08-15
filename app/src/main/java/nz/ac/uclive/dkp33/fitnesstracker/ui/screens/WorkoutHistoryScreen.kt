@@ -1,5 +1,6 @@
 package nz.ac.uclive.dkp33.fitnesstracker
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
@@ -12,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,6 +37,7 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
     }
 }
 
+@SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
@@ -54,14 +57,14 @@ fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            val dateFormatter = SimpleDateFormat("dd/MM/yyyy")
+            val dateFormatter = SimpleDateFormat(stringResource(R.string.date_format))
             val formattedDate = dateFormatter.format(workoutWithExercises.workout.date)
             Text(
-                text = "Workout Date: $formattedDate",
+                text = stringResource(R.string.workout_date_heading, formattedDate),
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text("Exercises:")
+            Text(stringResource(R.string.exercises_heading))
             Spacer(modifier = Modifier.height(4.dp))
             Column {
                 workoutWithExercises.exercises.forEachIndexed { index, exercise ->
@@ -87,7 +90,7 @@ fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
     }
 
     Text(
-        text = "${exercise.name}  Best Set: ${exercise.reps[bestSetIndex]} x ${exercise.weights[bestSetIndex]} kg",
+        text = stringResource(R.string.condensed_exercise, exercise.name, exercise.weights[bestSetIndex], exercise.reps[bestSetIndex]),
         fontWeight = FontWeight.Bold
     )
     AnimatedVisibility(
@@ -101,7 +104,7 @@ fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
             exercise.weights.forEachIndexed { index, weight ->
                 val reps = exercise.reps[index]
                 Text(
-                    text = "  Set ${index + 1}: Weight: $weight kg, Reps: $reps",
+                    text = stringResource(R.string.set_information, index + 1, weight, reps),
                     fontStyle = FontStyle.Italic
                 )
             }
