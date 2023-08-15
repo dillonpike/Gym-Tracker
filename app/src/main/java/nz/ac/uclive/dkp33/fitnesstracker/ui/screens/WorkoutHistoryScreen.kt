@@ -10,6 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,6 +39,8 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
 @Composable
 fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
     var expanded by remember { mutableStateOf(false) }
+    val haptic = LocalHapticFeedback.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -44,6 +48,7 @@ fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
         elevation = 4.dp,
         onClick = {
             expanded = !expanded
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         }
     ) {
         Column(
