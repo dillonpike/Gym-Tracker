@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.activity.ComponentActivity
+import androidx.compose.ui.Alignment
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.core.graphics.applyCanvas
@@ -36,18 +37,33 @@ import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutWithExercises
 import nz.ac.uclive.dkp33.fitnesstracker.ui.AppViewModelProvider
+import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.BackButton
+import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.ScreenHeading
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     val workoutHistory by workoutViewModel.workouts.observeAsState(listOf())
-    LazyColumn {
-        items(workoutHistory) { workoutWithExercises ->
-            WorkoutHistoryItem(workoutWithExercises = workoutWithExercises)
+    Scaffold(
+        topBar = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            ) {
+                BackButton(navController)
+                ScreenHeading(text = stringResource(R.string.workout_history))
+            }
+        },
+    ) {
+        LazyColumn {
+            items(workoutHistory) { workoutWithExercises ->
+                WorkoutHistoryItem(workoutWithExercises = workoutWithExercises)
+            }
         }
     }
 }

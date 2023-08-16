@@ -16,7 +16,8 @@
     <string name="date_format">yyyy年MM月dd日</string>
     <string name="condensed_exercise">"%1$s  ベストセット: %2$.1f キロ x %3$d"</string>
     <string name="set_information">"  セット %1$d: 重量: %2$.1f キロ, レップス: %3$d"</string>\
-    <string name="start_workout">トレーニングスタートする</string>
+    <string name="start_workout">トレーニングスタート</string>
     <string name="workout_history">トレーニング履歴</string>
     <string name="share_button">シェア</string>
+    <string name="back_button_description">Back</string>
 </resources>

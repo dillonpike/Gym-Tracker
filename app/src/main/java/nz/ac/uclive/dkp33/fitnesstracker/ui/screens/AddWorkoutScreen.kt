@@ -1,7 +1,6 @@
 package nz.ac.uclive.dkp33.fitnesstracker.ui.screens
 
 import android.annotation.SuppressLint
-import android.view.Gravity
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,7 +20,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -38,6 +36,8 @@ import nz.ac.uclive.dkp33.fitnesstracker.R
 import nz.ac.uclive.dkp33.fitnesstracker.Screen
 import nz.ac.uclive.dkp33.fitnesstracker.model.Exercise
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
+import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.BackButton
+import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.ScreenHeading
 import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -47,6 +47,27 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
     val exercises by workoutViewModel.exercises.observeAsState(listOf())
     val toast = Toast.makeText(LocalContext.current, stringResource(R.string.workout_completion_toast), Toast.LENGTH_SHORT)
     Scaffold(
+        topBar = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            ) {
+                BackButton(navController)
+                ScreenHeading(text = stringResource(R.string.add_workout_heading))
+                Spacer(Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        workoutViewModel.addWorkout()
+                        navController.navigate(Screen.WorkoutHistory.title)
+                        toast.show()
+                    },
+                    modifier = Modifier.padding(end = 16.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = colors.secondary)
+                ) {
+                    Text(text = stringResource(R.string.save_workout_button))
+                }
+            }
+        },
         bottomBar = {
             AddExerciseButton(workoutViewModel)
         }
@@ -56,21 +77,6 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Row {
-                AddWorkoutHeading()
-                Spacer(Modifier.weight(1f))
-                Button(
-                    onClick = {
-                        workoutViewModel.addWorkout()
-                        navController.navigate(Screen.WorkoutHistory.title)
-                        toast.show()
-                    },
-                    modifier = Modifier.padding(bottom = 16.dp),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = colors.secondary)
-                ) {
-                    Text(text = stringResource(R.string.save_workout_button))
-                }
-            }
             LazyColumn {
                 itemsIndexed(exercises) { exerciseIndex, exercise ->
                     Card(
@@ -102,16 +108,6 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
             }
         }
     }
-}
-
-@Composable
-private fun AddWorkoutHeading() {
-    Text(
-        text = stringResource(R.string.add_workout_heading),
-        style = MaterialTheme.typography.h5,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier.padding(bottom = 16.dp)
-    )
 }
 
 @Composable
