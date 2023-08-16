@@ -11,5 +11,6 @@ fun ScreenHeading(text: String) {
         text = text,
         style = MaterialTheme.typography.h5,
         fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colors.onSurface
     )
 }

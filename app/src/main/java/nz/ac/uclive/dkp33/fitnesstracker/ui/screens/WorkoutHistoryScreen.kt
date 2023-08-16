@@ -103,7 +103,6 @@ fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
                     onClick = {
                         sendBitmapAsEmailAttachment(view, context)
                     },
-                    modifier = Modifier.padding(bottom = 16.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
                 ) {
                     Text(text = stringResource(R.string.share_button))

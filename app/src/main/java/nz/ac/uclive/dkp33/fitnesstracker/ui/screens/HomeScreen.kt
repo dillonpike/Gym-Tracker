@@ -1,8 +1,10 @@
 package nz.ac.uclive.dkp33.fitnesstracker.ui.screens
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,7 +30,9 @@ fun HomeScreen(navController: NavController) {
 @Composable
 private fun PortraitHomeScreen(navController: NavController) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = colors.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -56,7 +60,9 @@ private fun PortraitHomeScreen(navController: NavController) {
 @Composable
 private fun LandscapeHomeScreen(navController: NavController) {
     Row(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = colors.surface),
     ) {
         Box(
             modifier = Modifier

@@ -58,10 +58,11 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
                 Button(
                     onClick = {
                         workoutViewModel.addWorkout()
+                        navController.popBackStack()
                         navController.navigate(Screen.WorkoutHistory.title)
                         toast.show()
                     },
-                    modifier = Modifier.padding(end = 16.dp),
+                    modifier = Modifier.padding(end = 8.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = colors.secondary)
                 ) {
                     Text(text = stringResource(R.string.save_workout_button))
@@ -72,37 +73,31 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
             AddExerciseButton(workoutViewModel)
         }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            LazyColumn {
-                itemsIndexed(exercises) { exerciseIndex, exercise ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        elevation = 4.dp
+        LazyColumn {
+            itemsIndexed(exercises) { exerciseIndex, exercise ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    elevation = 4.dp
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Row {
-                                NameTextField(
-                                    value = exercise.name,
-                                    onValueChange = {
-                                        workoutViewModel.updateExercise(
-                                            exerciseIndex,
-                                            exercise.copy(name = it)
-                                        )
-                                    }
-                                )
-                            }
-                            SetTitles()
-                            SetRows(workoutViewModel, exercise, exerciseIndex)
-                            AddSetButton(workoutViewModel, exerciseIndex)
+                        Row {
+                            NameTextField(
+                                value = exercise.name,
+                                onValueChange = {
+                                    workoutViewModel.updateExercise(
+                                        exerciseIndex,
+                                        exercise.copy(name = it)
+                                    )
+                                }
+                            )
                         }
+                        SetTitles()
+                        SetRows(workoutViewModel, exercise, exerciseIndex)
+                        AddSetButton(workoutViewModel, exerciseIndex)
                     }
                 }
             }
@@ -120,11 +115,10 @@ private fun AddExerciseButton(workoutViewModel: WorkoutViewModel) {
     ) {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = stringResource(id = R.string.add_set_button_description)
+            contentDescription = stringResource(id = R.string.add_exercise_button)
         )
         Text(
             text = stringResource(id = R.string.add_exercise_button),
-            modifier = Modifier.padding(start = 4.dp)
         )
     }
 }
@@ -134,16 +128,15 @@ private fun AddSetButton(workoutViewModel: WorkoutViewModel, exerciseIndex: Int)
     Button(
         onClick = { workoutViewModel.addSet(exerciseIndex) },
         modifier = Modifier
-            .padding(4.dp)
+            .padding(8.dp)
             .height(35.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Add,
-            contentDescription = stringResource(id = R.string.add_set_button_description)
+            contentDescription = stringResource(id = R.string.add_set_button)
         )
         Text(
-            text = stringResource(id = R.string.add_set_button_description),
-            modifier = Modifier.padding(start = 4.dp)
+            text = stringResource(id = R.string.add_set_button),
         )
     }
 }
@@ -154,7 +147,8 @@ private fun NameTextField(value : String, onValueChange: (String) -> Unit) {
         value = value,
         onValueChange = { onValueChange(it) },
         fontSize = 16.sp,
-        placeholderText = stringResource(R.string.text_field_name_placeholder)
+        placeholderText = stringResource(R.string.text_field_name_placeholder),
+        modifier = Modifier.padding(8.dp)
     )
 }
 
@@ -249,11 +243,11 @@ private fun CustomTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     BasicTextField(
-        modifier = modifier
-        .background(
-            MaterialTheme.colors.surface,
-            MaterialTheme.shapes.small,
-        ),
+//        modifier = modifier
+//        .background(
+//            MaterialTheme.colors.surface,
+//            MaterialTheme.shapes.small,
+//        ),
         value = value,
         onValueChange = { onValueChange(it) },
         keyboardOptions = keyboardOptions,

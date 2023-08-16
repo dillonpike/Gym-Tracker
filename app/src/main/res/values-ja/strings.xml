@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">フィットネストラッカー</string>
-    <string name="add_set_button_description">セットを追加する</string>
-    <string name="add_exercise_button">運動を追加する</string>
+    <string name="add_set_button">セットを追加</string>
+    <string name="add_exercise_button">運動を追加</string>
     <string name="workout_completion_toast">トレーニングの完了おめでとうございます!</string>
     <string name="save_workout_button">セーブ</string>
-    <string name="add_workout_heading">トレーニングを追加する</string>
+    <string name="add_workout_heading">トレーニングを追加</string>
     <string name="text_field_placeholder"></string>
     <string name="reps">レップス</string>
     <string name="weight_kg">重量 (キロ)</string>
