@@ -1,20 +1,10 @@
 package nz.ac.uclive.dkp33.fitnesstracker
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import nz.ac.uclive.dkp33.fitnesstracker.ui.screens.HomeScreen
 import nz.ac.uclive.dkp33.fitnesstracker.ui.screens.WorkoutTrackingScreen
 
 @Composable
@@ -29,30 +19,6 @@ fun FitnessTrackerApp() {
         }
         composable(Screen.WorkoutHistory.title) {
             WorkoutHistoryScreen(navController)
-        }
-    }
-}
-
-@Composable
-fun HomeScreen(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Button(
-            onClick = { navController.navigate(Screen.WorkoutTracking.title) },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(text = stringResource(R.string.start_workout))
-        }
-        Button(
-            onClick = { navController.navigate(Screen.WorkoutHistory.title) },
-            modifier = Modifier.padding(8.dp)
-        ) {
-            Text(text = stringResource(R.string.workout_history))
         }
     }
 }
