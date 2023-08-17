@@ -19,5 +19,6 @@
     <string name="start_workout">トレーニングスタート</string>
     <string name="workout_history">トレーニング履歴</string>
     <string name="share_button">シェア</string>
-    <string name="back_button_description">Back</string>
+    <string name="back_button_description">戻る</string>
+    <string name="share_workout_intent_title">トレーニングをシェア</string>
 </resources>

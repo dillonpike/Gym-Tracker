@@ -19,4 +19,5 @@
     <string name="workout_history">Workout History</string>
     <string name="share_button">Share</string>
     <string name="back_button_description">Back</string>
+    <string name="share_workout_intent_title">Share Workout</string>
 </resources>

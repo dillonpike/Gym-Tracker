@@ -74,9 +74,8 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
 fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
     var expanded by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
-
-    val view = LocalView.current
     val context = LocalContext.current
+    val workoutText = getWorkoutText(workoutWithExercises)
 
     Card(
         modifier = Modifier
@@ -101,7 +100,7 @@ fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
                 Spacer(Modifier.weight(1f))
                 Button(
                     onClick = {
-                        sendBitmapAsEmailAttachment(view, context)
+                        sendWorkoutIntent(context, workoutText)
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
                 ) {
@@ -123,16 +122,7 @@ fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
 @Composable
 fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
     val alpha = animateFloatAsState(if (showSets) 1f else 0f).value
-    var maxVolume = 0.0f
-    var bestSetIndex = 0
-
-    for (i in exercise.weights.indices) {
-        val volume = exercise.weights[i] * exercise.reps[i]
-        if (volume > maxVolume) {
-            maxVolume = volume
-            bestSetIndex = i
-        }
-    }
+    val bestSetIndex = getBestSetIndex(exercise)
 
     Text(
         text = stringResource(R.string.condensed_exercise, exercise.name, exercise.weights[bestSetIndex], exercise.reps[bestSetIndex]),
@@ -158,43 +148,55 @@ fun ExerciseItem(exercise: Exercise, showSets: Boolean) {
     Spacer(modifier = Modifier.height(4.dp))
 }
 
-private fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int) {
-    outputStream().use { out ->
-        bitmap.compress(format, quality, out)
-        out.flush()
-    }
+@SuppressLint("SimpleDateFormat")
+@Composable
+private fun getWorkoutText(workoutWithExercises: WorkoutWithExercises): String {
+    val dateFormatter = SimpleDateFormat(stringResource(R.string.date_format))
+    val formattedDate = dateFormatter.format(workoutWithExercises.workout.date)
+
+    return StringBuilder().apply {
+        append(stringResource(R.string.workout_date_heading, formattedDate))
+        append("\n")
+        append(stringResource(R.string.exercises_heading))
+        append("\n")
+
+        workoutWithExercises.exercises.forEachIndexed { index, exercise ->
+            val bestSetIndex = getBestSetIndex(exercise)
+            append(stringResource(R.string.condensed_exercise, exercise.name, exercise.weights[bestSetIndex], exercise.reps[bestSetIndex]))
+            append("\n")
+
+            exercise.weights.forEachIndexed { index, weight ->
+                val reps = exercise.reps[index]
+                append(stringResource(R.string.set_information, index + 1, weight, reps))
+                append("\n")
+            }
+        }
+    }.toString()
 }
 
-fun sendBitmapAsEmailAttachment(view: View, context: Context) {
-    val bmp = Bitmap.createBitmap(view.width, view.height,
-        Bitmap.Config.ARGB_8888).applyCanvas {
-        view.draw(this)
-    }
+private fun getBestSetIndex(exercise: Exercise): Int {
+    var maxVolume = 0.0f
+    var bestSetIndex = 0
 
-    // Create a file in the cache directory to store the bitmap
-    val file = File(context.cacheDir, "workout_image.png").apply {
-        try {
-            outputStream().use { outStream ->
-                // Compress the bitmap and write it to the file
-                bmp.compress(Bitmap.CompressFormat.PNG, 100, outStream)
-                outStream.flush()
-                outStream.close()
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
+    for (i in exercise.weights.indices) {
+        val volume = exercise.weights[i] * exercise.reps[i]
+        if (volume > maxVolume) {
+            maxVolume = volume
+            bestSetIndex = i
         }
     }
+    return bestSetIndex
+}
 
-    // Create a content URI for the file
-    val contentUri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
-
+@SuppressLint("QueryPermissionsNeeded", "SimpleDateFormat")
+private fun sendWorkoutIntent(context: Context, workoutText: String) {
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "image/png"
-        putExtra(Intent.EXTRA_STREAM, contentUri)
+        putExtra(Intent.EXTRA_TEXT, workoutText)
         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
     if (intent.resolveActivity(context.packageManager) != null) {
-        context.startActivity(Intent.createChooser(intent, "Share Workout"))
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_workout_intent_title)))
     }
 }
