@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -52,12 +53,26 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
             }
         },
     ) {
-        LazyColumn {
-            items(workoutHistory) { workoutWithExercises ->
-                WorkoutHistoryItem(
-                    workoutWithExercises = workoutWithExercises,
-                    workoutViewModel = workoutViewModel
+        if (workoutHistory.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                ScreenHeading(
+                    text = stringResource(R.string.no_workouts_yet),
+                    textAlign = TextAlign.Center
                 )
+            }
+        } else {
+            LazyColumn {
+                items(workoutHistory) { workoutWithExercises ->
+                    WorkoutHistoryItem(
+                        workoutWithExercises = workoutWithExercises,
+                        workoutViewModel = workoutViewModel
+                    )
+                }
             }
         }
     }

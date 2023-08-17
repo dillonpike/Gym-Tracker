@@ -1,18 +1,20 @@
 package nz.ac.uclive.dkp33.fitnesstracker.ui.screens
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import nz.ac.uclive.dkp33.fitnesstracker.R
 import nz.ac.uclive.dkp33.fitnesstracker.Screen
@@ -42,7 +44,7 @@ private fun PortraitHomeScreen(navController: NavController) {
                 .weight(0.5f),
             contentAlignment = Alignment.Center
         ) {
-            FlexEmoji()
+            GymIcon()
         }
         Column(
             modifier = Modifier
@@ -70,7 +72,7 @@ private fun LandscapeHomeScreen(navController: NavController) {
                 .weight(0.5f),
             contentAlignment = Alignment.Center
         ) {
-            FlexEmoji()
+            GymIcon()
         }
         Column(
             modifier = Modifier
@@ -86,10 +88,11 @@ private fun LandscapeHomeScreen(navController: NavController) {
 }
 
 @Composable
-private fun FlexEmoji() {
-    Text(
-        text = "\uD83D\uDCAA", // Replace with your desired emoji
-        fontSize = 225.sp, // Adjust the font size to make the emoji massive
+private fun GymIcon() {
+    Image(
+        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        contentDescription = stringResource(R.string.dumbbell_icon),
+        modifier = Modifier.fillMaxSize()
     )
 }
 

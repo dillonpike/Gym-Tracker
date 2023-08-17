@@ -24,4 +24,6 @@
     <string name="delete_workout">Delete Workout</string>
     <string name="delete_workout_confirmation_message">Are you sure you want to delete this workout?</string>
     <string name="cancel_button">Cancel</string>
+    <string name="dumbbell_icon">Dumbbell Icon</string>
+    <string name="no_workouts_yet">No workouts yet!</string>
 </resources>
