@@ -26,4 +26,6 @@
     <string name="cancel_button">Cancel</string>
     <string name="dumbbell_icon">Dumbbell Icon</string>
     <string name="no_workouts_yet">No workouts yet!</string>
+    <string name="more_options">More options</string>
+    <string name="new_line">\n</string>
 </resources>

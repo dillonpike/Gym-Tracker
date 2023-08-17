@@ -27,4 +27,6 @@
     <string name="cancel_button">キャンセル</string>
     <string name="dumbbell_icon">ダンベルのアイコン</string>
     <string name="no_workouts_yet">まだトレーニングはありません！</string>
+    <string name="more_options">もっとオプション</string>
+    <string name="new_line">\n</string>
 </resources>

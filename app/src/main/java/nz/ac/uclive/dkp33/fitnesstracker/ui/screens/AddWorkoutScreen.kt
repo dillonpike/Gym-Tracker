@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -36,8 +35,7 @@ import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.CustomTextField
 import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.ScreenHeading
 import nz.ac.uclive.dkp33.fitnesstracker.ui.theme.FitnessTrackerTheme
 
-@OptIn(ExperimentalComposeUiApi::class)
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "ShowToast")
+@SuppressLint("ShowToast")
 @Composable
 fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     val exercises by workoutViewModel.exercises.observeAsState(listOf())
@@ -70,8 +68,10 @@ fun WorkoutTrackingScreen(navController: NavController, workoutViewModel: Workou
         bottomBar = {
             AddExerciseButton(workoutViewModel)
         }
-    ) {
-        LazyColumn {
+    ) { innerPadding ->
+        LazyColumn(
+            modifier = Modifier.padding(innerPadding)
+        ) {
             itemsIndexed(exercises) { exerciseIndex, exercise ->
                 Card(
                     modifier = Modifier

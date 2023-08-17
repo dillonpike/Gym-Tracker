@@ -36,7 +36,6 @@ import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.ThreeDotsIconButton
 import java.text.SimpleDateFormat
 import java.util.*
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: WorkoutViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     val workoutHistory by workoutViewModel.workouts.observeAsState(listOf())
@@ -52,7 +51,7 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
                 ScreenHeading(text = stringResource(R.string.workout_history))
             }
         },
-    ) {
+    ) { innerPadding ->
         if (workoutHistory.isEmpty()) {
             Box(
                 modifier = Modifier
@@ -66,7 +65,9 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
                 )
             }
         } else {
-            LazyColumn {
+            LazyColumn(
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 items(workoutHistory) { workoutWithExercises ->
                     WorkoutHistoryItem(
                         workoutWithExercises = workoutWithExercises,
@@ -123,8 +124,10 @@ fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises, workoutViewMo
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(stringResource(R.string.exercises_heading))
+            Text(
+                fontWeight = FontWeight.Bold,
+                text = stringResource(R.string.exercises_heading)
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Column {
                 workoutWithExercises.exercises.forEachIndexed { index, exercise ->
@@ -172,19 +175,19 @@ private fun getWorkoutText(workoutWithExercises: WorkoutWithExercises): String {
 
     return StringBuilder().apply {
         append(stringResource(R.string.workout_date_heading, formattedDate))
-        append("\n")
+        append(stringResource(R.string.new_line))
         append(stringResource(R.string.exercises_heading))
-        append("\n")
+        append(stringResource(R.string.new_line))
 
         workoutWithExercises.exercises.forEachIndexed { index, exercise ->
             val bestSetIndex = getBestSetIndex(exercise)
             append(stringResource(R.string.condensed_exercise, exercise.name, exercise.weights[bestSetIndex], exercise.reps[bestSetIndex]))
-            append("\n")
+            append(stringResource(R.string.new_line))
 
             exercise.weights.forEachIndexed { setIndex, weight ->
                 val reps = exercise.reps[setIndex]
                 append(stringResource(R.string.set_information, setIndex + 1, weight, reps))
-                append("\n")
+                append(stringResource(R.string.new_line))
             }
         }
     }.toString()
@@ -204,7 +207,7 @@ private fun getBestSetIndex(exercise: Exercise): Int {
     return bestSetIndex
 }
 
-@SuppressLint("QueryPermissionsNeeded", "SimpleDateFormat")
+@SuppressLint("QueryPermissionsNeeded")
 private fun sendWorkoutIntent(context: Context, workoutText: String) {
     val intent = Intent(Intent.ACTION_SEND).apply {
         type = "image/png"

@@ -16,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import nz.ac.uclive.dkp33.fitnesstracker.R
 
-
 @Composable
 fun ThreeDotsIconButton(onShareClick: () -> Unit, onDeleteClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
@@ -25,7 +24,7 @@ fun ThreeDotsIconButton(onShareClick: () -> Unit, onDeleteClick: () -> Unit) {
         IconButton(
             onClick = { expanded = true }
         ) {
-            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+            Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more_options))
         }
 
         DropdownMenu(
