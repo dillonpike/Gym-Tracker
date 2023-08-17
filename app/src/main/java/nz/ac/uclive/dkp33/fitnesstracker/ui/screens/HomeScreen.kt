@@ -3,6 +3,7 @@ package nz.ac.uclive.dkp33.fitnesstracker.ui.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Card
@@ -89,8 +90,13 @@ private fun LandscapeHomeScreen(navController: NavController) {
 
 @Composable
 private fun GymIcon() {
+    val icon = if (isSystemInDarkTheme()) {
+        R.drawable.ic_launcher_foreground_dark
+    } else {
+        R.drawable.ic_launcher_foreground
+    }
     Image(
-        painter = painterResource(id = R.drawable.ic_launcher_foreground),
+        painter = painterResource(id = icon),
         contentDescription = stringResource(R.string.dumbbell_icon),
         modifier = Modifier.fillMaxSize()
     )
