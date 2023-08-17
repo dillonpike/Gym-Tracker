@@ -10,4 +10,9 @@ class WorkoutRepository(private val workoutDao: WorkoutDao) {
     suspend fun insert(workout: Workout): Long {
         return workoutDao.insert(workout)
     }
+
+    @WorkerThread
+    suspend fun delete(workout: Workout): Int {
+        return workoutDao.delete(workout)
+    }
 }

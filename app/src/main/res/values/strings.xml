@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fitness Tracker</string>
+    <string name="app_name">Gym Tracker</string>
     <string name="add_set_button">Add Set</string>
     <string name="add_exercise_button">Add Exercise</string>
     <string name="workout_completion_toast">Congrats on completing your workout!</string>
@@ -20,4 +20,8 @@
     <string name="share_button">Share</string>
     <string name="back_button_description">Back</string>
     <string name="share_workout_intent_title">Share Workout</string>
+    <string name="delete_button">Delete</string>
+    <string name="delete_workout">Delete Workout</string>
+    <string name="delete_workout_confirmation_message">Are you sure you want to delete this workout?</string>
+    <string name="cancel_button">Cancel</string>
 </resources>

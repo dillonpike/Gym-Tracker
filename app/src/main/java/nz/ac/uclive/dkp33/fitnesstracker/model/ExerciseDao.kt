@@ -10,6 +10,9 @@ interface ExerciseDao {
     @Insert
     suspend fun insert(exercise: Exercise): Long
 
+    @Query("DELETE FROM Exercise WHERE workoutId = :workoutId")
+    suspend fun deleteByWorkoutId(workoutId: Long): Int
+
     @Query("SELECT * FROM Exercise")
     fun getExercises(): Flow<List<Exercise>>
 }

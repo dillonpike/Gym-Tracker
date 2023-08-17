@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">フィットネストラッカー</string>
+    <string name="app_name">ジムトラッカー</string>
     <string name="add_set_button">セットを追加</string>
     <string name="add_exercise_button">運動を追加</string>
     <string name="workout_completion_toast">トレーニングの完了おめでとうございます!</string>
@@ -21,4 +21,8 @@
     <string name="share_button">シェア</string>
     <string name="back_button_description">戻る</string>
     <string name="share_workout_intent_title">トレーニングをシェア</string>
+    <string name="delete_button">デリート</string>
+    <string name="delete_workout">トレーニングをデリート</string>
+    <string name="delete_workout_confirmation_message">このトレーニングをキャンセルしてもよろしいですか?</string>
+    <string name="cancel_button">キャンセル</string>
 </resources>

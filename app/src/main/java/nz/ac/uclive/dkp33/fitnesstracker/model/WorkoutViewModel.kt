@@ -1,11 +1,13 @@
 package nz.ac.uclive.dkp33.fitnesstracker.model
 
-import android.util.Log
-import androidx.compose.runtime.collectAsState
-import androidx.lifecycle.*
-import kotlinx.coroutines.flow.collect
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 class WorkoutViewModel(private val workoutRepository: WorkoutRepository, private val exerciseRepository: ExerciseRepository) : ViewModel() {
 
@@ -20,9 +22,10 @@ class WorkoutViewModel(private val workoutRepository: WorkoutRepository, private
         }
     }
 
-    private val _workoutDate = MutableLiveData<Date>(Calendar.getInstance().time)
-    val workoutDate: LiveData<Date>
-        get() = _workoutDate
+    fun deleteWorkout(workout: Workout) = viewModelScope.launch {
+        exerciseRepository.deleteByWorkoutId(workout.workoutId)
+        workoutRepository.delete(workout)
+    }
 
     private val _exercises = MutableLiveData<List<Exercise>>(listOf(Exercise(name = "", workoutId = 0, weights = listOf(0f), reps = listOf(0))))
     val exercises: LiveData<List<Exercise>>
@@ -31,14 +34,6 @@ class WorkoutViewModel(private val workoutRepository: WorkoutRepository, private
     private val _name = MutableLiveData("")
     val name: LiveData<String>
         get() = _name
-
-    fun setWorkoutDate(date: Date) {
-        _workoutDate.value = date
-    }
-
-    fun setExercises(newExercises: List<Exercise>) {
-        _exercises.value = newExercises
-    }
 
     fun updateExercise(index: Int, updatedExercise: Exercise) {
         val updatedExercises = exercises.value?.toMutableList() ?: mutableListOf()

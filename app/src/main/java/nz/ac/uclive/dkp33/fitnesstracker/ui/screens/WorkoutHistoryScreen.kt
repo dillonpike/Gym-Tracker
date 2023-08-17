@@ -3,10 +3,6 @@ package nz.ac.uclive.dkp33.fitnesstracker
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.*
@@ -15,21 +11,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.activity.ComponentActivity
-import androidx.compose.ui.Alignment
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.content.FileProvider
-import androidx.core.graphics.applyCanvas
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
@@ -38,10 +29,9 @@ import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutViewModel
 import nz.ac.uclive.dkp33.fitnesstracker.model.WorkoutWithExercises
 import nz.ac.uclive.dkp33.fitnesstracker.ui.AppViewModelProvider
 import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.BackButton
+import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.DeleteConfirmationDialog
 import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.ScreenHeading
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import nz.ac.uclive.dkp33.fitnesstracker.ui.composables.ThreeDotsIconButton
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,7 +43,9 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
         topBar = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
             ) {
                 BackButton(navController)
                 ScreenHeading(text = stringResource(R.string.workout_history))
@@ -62,7 +54,10 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
     ) {
         LazyColumn {
             items(workoutHistory) { workoutWithExercises ->
-                WorkoutHistoryItem(workoutWithExercises = workoutWithExercises)
+                WorkoutHistoryItem(
+                    workoutWithExercises = workoutWithExercises,
+                    workoutViewModel = workoutViewModel
+                )
             }
         }
     }
@@ -71,8 +66,9 @@ fun WorkoutHistoryScreen(navController: NavController, workoutViewModel: Workout
 @SuppressLint("SimpleDateFormat")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
+fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises, workoutViewModel: WorkoutViewModel) {
     var expanded by remember { mutableStateOf(false) }
+    var deleteDialogVisible by remember { mutableStateOf(false) }
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
     val workoutText = getWorkoutText(workoutWithExercises)
@@ -98,13 +94,18 @@ fun WorkoutHistoryItem(workoutWithExercises: WorkoutWithExercises) {
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.weight(1f))
-                Button(
-                    onClick = {
-                        sendWorkoutIntent(context, workoutText)
-                    },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.secondary)
-                ) {
-                    Text(text = stringResource(R.string.share_button))
+                ThreeDotsIconButton(
+                    onShareClick = { sendWorkoutIntent(context, workoutText) },
+                    onDeleteClick = { deleteDialogVisible = true }
+                )
+                if (deleteDialogVisible) {
+                    DeleteConfirmationDialog(
+                        {
+                            workoutViewModel.deleteWorkout(workoutWithExercises.workout)
+                            deleteDialogVisible = false
+                        },
+                        { deleteDialogVisible = false }
+                    )
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -165,9 +166,9 @@ private fun getWorkoutText(workoutWithExercises: WorkoutWithExercises): String {
             append(stringResource(R.string.condensed_exercise, exercise.name, exercise.weights[bestSetIndex], exercise.reps[bestSetIndex]))
             append("\n")
 
-            exercise.weights.forEachIndexed { index, weight ->
-                val reps = exercise.reps[index]
-                append(stringResource(R.string.set_information, index + 1, weight, reps))
+            exercise.weights.forEachIndexed { setIndex, weight ->
+                val reps = exercise.reps[setIndex]
+                append(stringResource(R.string.set_information, setIndex + 1, weight, reps))
                 append("\n")
             }
         }
