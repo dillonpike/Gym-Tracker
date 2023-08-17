@@ -29,8 +29,6 @@ fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    leadingIcon: (@Composable () -> Unit)? = null,
-    trailingIcon: (@Composable () -> Unit)? = null,
     placeholderText: String = stringResource(R.string.text_field_placeholder),
     fontSize: TextUnit = MaterialTheme.typography.body2.fontSize,
     textAlign: TextAlign = TextAlign.Left,
@@ -64,7 +62,6 @@ fun CustomTextField(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(horizontal = 6.dp)
             ) {
-                if (leadingIcon != null) leadingIcon()
                 Box(Modifier.weight(1f)) {
                     if (value.isEmpty()) Text(
                         placeholderText,
@@ -75,7 +72,6 @@ fun CustomTextField(
                     )
                     innerTextField()
                 }
-                if (trailingIcon != null) trailingIcon()
             }
         }
     )
